@@ -1,12 +1,31 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.views.generic.edit import CreateView, DeleteView
+from django.views.generic import ListView
 
-# Create your views here.
-from django.http import HttpResponse
+from .models import Widget
 
 
-def widget_index(request):
-    return render(request, 'index.html')
+class WidgetCreate(ListView):
+    model = Widget
+    fields = '__all__'
 
-def widget_index(request): 
-    widgets = Widget.objects.filter(user=request.user)
+class WidgetDelete(ListView):
+    model = Widget
+    success_url = '/'
+
+
+
+def home(request):
+    return redirect ('widgets_index')
+
+def widgets_index(request): 
+    widgets = Widget.objects.all()
     return render(request, 'widgets/index.html', { 'widgets': widgets })
+
+def widgets_detail(request, widget_id):
+    widget = Widget.objects.get(id=widget_id)
+    return render(request, 'widgets/index.html', { 'widgets': widgets })
+
+
+class WidgetList(ListView):
+    model = Widget
